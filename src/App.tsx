@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import UserDetails from "./pages/UserDetails";
+import UserProfile from "./pages/UserProfile";
 import GpsService from "./pages/GpsService";
 import Requests from "./pages/Requests";
 import TelegramBot from "./pages/TelegramBot";
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/user-details" element={<UserDetails />} />
+          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/gps-service" element={<GpsService />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/telegram-bot" element={<TelegramBot />} />

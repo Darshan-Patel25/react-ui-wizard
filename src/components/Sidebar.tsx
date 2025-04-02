@@ -12,7 +12,8 @@ import {
   Menu,
   MapPin,
   ListChecks,
-  MessageSquare
+  MessageSquare,
+  User
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,15 +49,19 @@ const Sidebar = () => {
           </Button>
         ) : (
           <div className="flex items-center space-x-3 mb-6">
-            <Avatar className="h-9 w-9">
-              <img
-                src="https://github.com/shadcn.png" 
-                alt="Profile"
-                className="object-cover"
-              />
-            </Avatar>
+            <Link to="/user-profile">
+              <Avatar className="h-9 w-9 cursor-pointer hover:ring-2 hover:ring-primary/50 transition-all">
+                <img
+                  src="https://github.com/shadcn.png" 
+                  alt="Profile"
+                  className="object-cover"
+                />
+              </Avatar>
+            </Link>
             <div className="flex flex-col">
-              <span className="font-medium text-sm">Theresa Webb</span>
+              <Link to="/user-profile" className="font-medium text-sm hover:text-primary">
+                Theresa Webb
+              </Link>
               <span className="text-gray-500 text-xs">theresa@glowteam</span>
             </div>
             <Button
@@ -104,6 +109,12 @@ const Sidebar = () => {
       {/* Footer Nav */}
       <div className="mt-auto border-t py-2">
         <ul className="space-y-1 px-2">
+          <li>
+            <Link className="sidebar-item" to="/user-profile">
+              <User className="h-5 w-5" />
+              {!isCollapsed && <span>My Profile</span>}
+            </Link>
+          </li>
           <li>
             <Link className="sidebar-item" to="/help">
               <HelpCircle className="h-5 w-5" />
