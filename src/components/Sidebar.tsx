@@ -1,12 +1,37 @@
 
 import { useState } from 'react';
-import { LayoutDashboard, Users, Car, Drill, CreditCard, HelpCircle, Settings, Search, Menu } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  Users, 
+  Car, 
+  Drill, 
+  CreditCard, 
+  HelpCircle, 
+  Settings, 
+  Search, 
+  Menu,
+  MapPin,
+  ListChecks,
+  MessageSquare
+} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar } from "@/components/ui/avatar";
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const sidebarItems = [
+    { icon: LayoutDashboard, text: 'Dashboard', path: '/dashboard' },
+    { icon: Users, text: 'Customers', path: '/user-details' },
+    { icon: MapPin, text: 'GPS Service', path: '/gps-service' },
+    { icon: ListChecks, text: 'Requests', path: '/requests' },
+    { icon: MessageSquare, text: 'Telegram Bot', path: '/telegram-bot' },
+    { icon: Car, text: 'Cars', path: '/cars' },
+    { icon: Drill, text: 'Test Drive', path: '/test-drive' },
+    { icon: CreditCard, text: 'Payments', path: '/payments' },
+  ];
 
   return (
     <div className={`bg-white border-r ${isCollapsed ? 'w-16' : 'w-64'} h-screen transition-all duration-300 ease-in-out flex flex-col`}>
@@ -60,49 +85,19 @@ const Sidebar = () => {
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-1 px-2">
-          <li>
-            <a className="sidebar-item active" href="#">
-              <LayoutDashboard className="h-5 w-5" />
-              {!isCollapsed && <span>Dashboard</span>}
-            </a>
-          </li>
-          <li>
-            <a className="sidebar-item" href="#">
-              <Users className="h-5 w-5" />
-              {!isCollapsed && (
-                <div className="flex items-center justify-between w-full">
-                  <span>Projects</span>
-                  <span className="bg-gray-200 text-gray-800 text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center">
-                    6
-                  </span>
-                </div>
-              )}
-            </a>
-          </li>
-          <li>
-            <a className="sidebar-item" href="#">
-              <Users className="h-5 w-5" />
-              {!isCollapsed && <span>Customers</span>}
-            </a>
-          </li>
-          <li>
-            <a className="sidebar-item" href="#">
-              <Car className="h-5 w-5" />
-              {!isCollapsed && <span>Cars</span>}
-            </a>
-          </li>
-          <li>
-            <a className="sidebar-item" href="#">
-              <Drill className="h-5 w-5" />
-              {!isCollapsed && <span>Test Drive</span>}
-            </a>
-          </li>
-          <li>
-            <a className="sidebar-item" href="#">
-              <CreditCard className="h-5 w-5" />
-              {!isCollapsed && <span>Payments</span>}
-            </a>
-          </li>
+          {sidebarItems.map((item, index) => (
+            <li key={index}>
+              <Link 
+                className={`sidebar-item ${window.location.pathname === item.path ? 'active' : ''}`} 
+                to={item.path}
+              >
+                <item.icon className="h-5 w-5" />
+                {!isCollapsed && (
+                  <span>{item.text}</span>
+                )}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -110,16 +105,16 @@ const Sidebar = () => {
       <div className="mt-auto border-t py-2">
         <ul className="space-y-1 px-2">
           <li>
-            <a className="sidebar-item" href="#">
+            <Link className="sidebar-item" to="/help">
               <HelpCircle className="h-5 w-5" />
               {!isCollapsed && <span>Help & Center</span>}
-            </a>
+            </Link>
           </li>
           <li>
-            <a className="sidebar-item" href="#">
+            <Link className="sidebar-item" to="/settings">
               <Settings className="h-5 w-5" />
               {!isCollapsed && <span>Settings</span>}
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
