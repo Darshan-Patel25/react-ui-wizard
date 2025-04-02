@@ -1,12 +1,12 @@
 
 import { useState } from 'react';
-import { LayoutKanban, List, GanttChart, Table2 } from 'lucide-react';
+import { Kanban, List, GanttChart, Table2 } from 'lucide-react';
 
 const ViewTabs = () => {
   const [activeTab, setActiveTab] = useState('list');
 
   const tabs = [
-    { id: 'kanban', name: 'Kanban', icon: <LayoutKanban className="h-4 w-4" /> },
+    { id: 'kanban', name: 'Kanban', icon: <Kanban className="h-4 w-4" /> },
     { id: 'list', name: 'List', icon: <List className="h-4 w-4" /> },
     { id: 'gantt', name: 'Gantt', icon: <GanttChart className="h-4 w-4" /> },
     { id: 'table', name: 'Table', icon: <Table2 className="h-4 w-4" /> },
