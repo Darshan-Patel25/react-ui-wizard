@@ -1,4 +1,3 @@
-
 import { Helmet } from 'react-helmet';
 import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
@@ -18,10 +17,14 @@ import {
   BarChart3, 
   Clock, 
   ChevronRight, 
-  HelpCircle 
+  HelpCircle,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const BotStatus = {
   ONLINE: 'online',
@@ -34,6 +37,10 @@ const TelegramBot = () => {
   const [botStatus, setBotStatus] = useState(BotStatus.ONLINE);
   const [webhookUrl, setWebhookUrl] = useState('https://api.example.com/telegram-webhook');
   const [isLoading, setIsLoading] = useState(false);
+  const [chatId, setChatId] = useState('');
+  const [botConnected, setBotConnected] = useState(false);
+  const [showRequestDialog, setShowRequestDialog] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<any>(null);
   const { toast } = useToast();
 
   // Mock conversations
@@ -62,6 +69,13 @@ const TelegramBot = () => {
     avgResponseTime: '2.5 min',
   };
 
+  // Mock pending requests
+  const pendingRequests = [
+    { id: 1, user: 'John Doe', type: 'GPS Installation', location: '123 Main St, San Francisco', date: '2023-05-15', status: 'pending' },
+    { id: 2, user: 'Jane Smith', type: 'Service', location: '456 Oak Ave, Berkeley', date: '2023-05-16', status: 'pending' },
+    { id: 3, user: 'Robert Johnson', type: 'Device Repair', location: '789 Pine St, Oakland', date: '2023-05-17', status: 'pending' },
+  ];
+
   const handleStatusChange = (newStatus: string) => {
     setBotStatus(newStatus);
     toast({
@@ -79,6 +93,46 @@ const TelegramBot = () => {
         description: "The Telegram bot webhook URL has been updated successfully",
       });
     }, 1000);
+  };
+
+  const handleConnectBot = () => {
+    if (!chatId.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid Chat ID",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      setBotConnected(true);
+      toast({
+        title: "Bot Connected",
+        description: `Successfully connected to Telegram bot with Chat ID: ${chatId}`,
+      });
+    }, 1500);
+  };
+
+  const handleDisconnectBot = () => {
+    setBotConnected(false);
+    toast({
+      title: "Bot Disconnected",
+      description: "Successfully disconnected from Telegram bot",
+    });
+  };
+
+  const handleRequestAction = (action: 'accept' | 'reject') => {
+    if (!selectedRequest) return;
+    
+    setShowRequestDialog(false);
+    
+    toast({
+      title: action === 'accept' ? "Request Accepted" : "Request Rejected",
+      description: `You have ${action === 'accept' ? 'accepted' : 'rejected'} the request from ${selectedRequest.user}`,
+    });
   };
 
   return (
@@ -121,6 +175,7 @@ const TelegramBot = () => {
               <TabsList>
                 <TabsTrigger value="conversations">Conversations</TabsTrigger>
                 <TabsTrigger value="commands">Commands</TabsTrigger>
+                <TabsTrigger value="requests">Requests</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 <TabsTrigger value="settings">Settings</TabsTrigger>
               </TabsList>
@@ -259,6 +314,52 @@ const TelegramBot = () => {
                 </Card>
               </TabsContent>
               
+              <TabsContent value="requests" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Service Requests</CardTitle>
+                    <CardDescription>Manage service requests from Telegram users</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {!botConnected ? (
+                      <div className="text-center py-6">
+                        <Bot className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                        <h3 className="text-lg font-medium mb-2">Bot Not Connected</h3>
+                        <p className="text-muted-foreground mb-4">Connect your Telegram bot to view and manage service requests</p>
+                        <Button onClick={() => setActiveTab('settings')}>Go to Settings</Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <h3 className="font-medium">Pending Requests</h3>
+                        <div className="space-y-2">
+                          {pendingRequests.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between p-3 border rounded-lg">
+                              <div>
+                                <p className="font-medium">{request.user}</p>
+                                <p className="text-sm text-muted-foreground">{request.type} - {request.date}</p>
+                                <p className="text-xs text-muted-foreground">{request.location}</p>
+                              </div>
+                              <div className="flex space-x-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedRequest(request);
+                                    setShowRequestDialog(true);
+                                  }}
+                                >
+                                  View Details
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
               <TabsContent value="analytics" className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card className="md:col-span-3">
@@ -331,6 +432,48 @@ const TelegramBot = () => {
               </TabsContent>
               
               <TabsContent value="settings" className="space-y-4">
+                <Card className="mb-6">
+                  <CardHeader>
+                    <CardTitle>Bot Connection</CardTitle>
+                    <CardDescription>Connect to your Telegram bot</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    {botConnected ? (
+                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <div className="flex items-center mb-2">
+                          <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                          <p className="font-medium text-green-700">Bot Successfully Connected</p>
+                        </div>
+                        <p className="text-sm text-green-600 mb-3">Your Telegram bot is connected with Chat ID: {chatId}</p>
+                        <Button variant="outline" size="sm" onClick={handleDisconnectBot}>
+                          Disconnect Bot
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="chatId">Telegram Bot Chat ID</Label>
+                          <Input 
+                            id="chatId" 
+                            value={chatId}
+                            onChange={(e) => setChatId(e.target.value)}
+                            placeholder="Enter your Telegram bot Chat ID"
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            You can find your Chat ID by messaging @userinfobot on Telegram
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={handleConnectBot}
+                          disabled={isLoading}
+                        >
+                          {isLoading ? "Connecting..." : "Connect Bot"}
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+                
                 <Card>
                   <CardHeader>
                     <CardTitle>Bot Configuration</CardTitle>
@@ -474,6 +617,58 @@ const TelegramBot = () => {
           </div>
         </div>
       </div>
+      
+      <Dialog open={showRequestDialog} onOpenChange={setShowRequestDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Service Request Details</DialogTitle>
+            <DialogDescription>
+              Request from {selectedRequest?.user}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedRequest && (
+            <div className="space-y-4 py-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <p className="text-sm font-medium">Request Type</p>
+                  <p className="text-sm">{selectedRequest.type}</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Date</p>
+                  <p className="text-sm">{selectedRequest.date}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-sm font-medium">Location</p>
+                  <p className="text-sm">{selectedRequest.location}</p>
+                </div>
+              </div>
+              
+              <div className="border-t pt-4">
+                <p className="text-sm font-medium mb-2">Take Action</p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Would you like to accept or reject this service request?
+                </p>
+              </div>
+            </div>
+          )}
+          
+          <DialogFooter className="flex space-x-2 justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => handleRequestAction('reject')}
+              className="text-red-600"
+            >
+              <XCircle className="h-4 w-4 mr-2" />
+              Reject Request
+            </Button>
+            <Button onClick={() => handleRequestAction('accept')}>
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Accept Request
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

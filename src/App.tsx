@@ -11,6 +11,8 @@ import UserProfile from "./pages/UserProfile";
 import GpsService from "./pages/GpsService";
 import Requests from "./pages/Requests";
 import TelegramBot from "./pages/TelegramBot";
+import Cars from "./pages/Cars";
+import TestDrive from "./pages/TestDrive";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/gps-service" element={<GpsService />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/telegram-bot" element={<TelegramBot />} />
+          <Route path="/cars" element={<Cars />} />
+          <Route path="/test-drive" element={<TestDrive />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
