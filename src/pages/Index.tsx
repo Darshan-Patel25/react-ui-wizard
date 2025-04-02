@@ -1,13 +1,29 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { Helmet } from 'react-helmet';
+import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
+import ViewTabs from '@/components/ViewTabs';
+import LeadTable from '@/components/LeadTable';
+import AiPromo from '@/components/AiPromo';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <>
+      <Helmet>
+        <title>Salespipe | CRM Dashboard</title>
+      </Helmet>
+      <div className="flex h-screen bg-gray-50">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="p-6 flex-1 overflow-auto">
+            <Header />
+            <ViewTabs />
+            <LeadTable />
+          </div>
+        </div>
+        <AiPromo />
       </div>
-    </div>
+    </>
   );
 };
 

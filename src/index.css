@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,21 +35,14 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Custom colors for CRM app */
+    --hot: 0 85% 65%;
+    --warm: 37 100% 65%;
+    --cold: 195 100% 65%;
+    --deal: 142 70% 45%;
+    --high: 0 85% 65%;
+    --medium: 37 100% 65%;
+    --low: 142 70% 45%;
   }
 
   .dark {
@@ -79,14 +73,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -98,4 +84,45 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom classes for our CRM */
+.tag-hot {
+  @apply bg-red-100 text-red-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.tag-warm {
+  @apply bg-amber-100 text-amber-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.tag-cold {
+  @apply bg-sky-100 text-sky-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.tag-deal {
+  @apply bg-green-100 text-green-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.priority-high {
+  @apply bg-red-100 text-red-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.priority-medium {
+  @apply bg-amber-100 text-amber-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.priority-low {
+  @apply bg-green-100 text-green-600 flex items-center justify-center gap-1 px-2 py-1 rounded-md text-xs font-medium;
+}
+
+.sidebar-item {
+  @apply flex items-center gap-3 text-gray-700 font-medium px-4 py-2 rounded-md hover:bg-gray-100 transition-colors;
+}
+
+.sidebar-item.active {
+  @apply bg-gray-100;
+}
+
+.section-header {
+  @apply flex items-center justify-between border-b pb-2 mb-4;
 }
